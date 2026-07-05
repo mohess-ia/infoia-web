@@ -489,9 +489,27 @@
   function init() {
     buildWidget();
 
-    /* Aparece a los 3 segundos con animación profesional */
+    /* Aparece a los 3 segundos con animación profesional.
+       Por debajo de 900px el hero apila la ilustración encima del texto
+       (mismo breakpoint que su grid-template-columns), lo que lo hace más
+       alto que la pantalla en móvil. Ahí esperamos a que el usuario lo haya
+       pasado antes de mostrar el widget, para no tapar el texto del hero. */
     setTimeout(function () {
-      document.getElementById('infoia-chatbot').classList.add('chatbot-visible');
+      var reveal = function () {
+        document.getElementById('infoia-chatbot').classList.add('chatbot-visible');
+      };
+      var hero = document.querySelector('.hero');
+      if (!hero || !('IntersectionObserver' in window) || window.innerWidth > 900 || hero.getBoundingClientRect().height <= window.innerHeight) {
+        reveal();
+        return;
+      }
+      var observer = new IntersectionObserver(function (entries) {
+        if (!entries[0].isIntersecting) {
+          reveal();
+          observer.disconnect();
+        }
+      });
+      observer.observe(hero);
     }, 3000);
 
     /* Events */
