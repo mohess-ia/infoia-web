@@ -8,11 +8,16 @@
     "prebuild": "if [ -d dist/.git ]; then rm -rf .git_backup && cp -r dist/.git .git_backup; fi",
     "build": "astro build",
     "postbuild": "if [ -d .git_backup ]; then cp -r .git_backup dist/.git && rm -rf .git_backup; fi",
-    "preview": "astro preview"
+    "preview": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "11",
     "astro": "^4.16.18",
     "gsap": "^3.12.5",
     "lenis": "^1.1.14"
+  },
+  "devDependencies": {
+    "wrangler": "^4.107.0"
   }
 }
